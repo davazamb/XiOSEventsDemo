@@ -1,5 +1,5 @@
 ﻿using System;
-
+using Foundation;
 using UIKit;
 
 namespace XiOSEventsDemo
@@ -17,6 +17,8 @@ namespace XiOSEventsDemo
 			// Perform any additional setup after loading the view, typically from a nib.
 			btnStart.AccessibilityIdentifier = "myButton";
 			btnStart.TouchUpInside+= BtnStart_TouchUpInside;
+			txtName.Delegate = new UITextFieldUserValidationDelegate();
+			txtPassword.WeakDelegate = this;
 		}
 
 		partial void ValueChanged(UITextField sender)
@@ -40,6 +42,12 @@ namespace XiOSEventsDemo
 				btnStart.TouchUpInside += (sen, eve) => this.ShowPopup("Hola", "Alerta");
 			}
 			
+		}
+
+		[Export("textField:shouldChangeCharactersInRange:replacementString:")]
+		public bool ShouldChangeCharacters(UITextField textField, Foundation.NSRange range, string replacementString)
+		{
+			return Validations.ValidateInput(replacementString, Validations.ValidationType.Password);
 		}
 	}
 }
